@@ -1,0 +1,7 @@
+.env
+.env.*
+!.env.example
+node_modules/
+database/studio.db
+database/studio.db-shm
+database/studio.db-wal

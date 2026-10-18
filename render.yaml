@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: whiterose-ai-video-studio
+    runtime: node
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: MAGIC_HOUR_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: HIGGSFIELD_API_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false

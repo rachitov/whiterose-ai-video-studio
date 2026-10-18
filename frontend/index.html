@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Whiterose AI Video Studio</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#17171c;--pn:#202027;--pn2:#27272f;--ln:#34343f;--tx:#f2f2f5;--mu:#a0a0b2;--ac:#8c7df7;--ac2:#5f8df0;--bad:#f2777f;--ok:#6fd1a2;--warn:#e7c46a;
+color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif}
+.app{display:grid;grid-template-columns:230px minmax(0,1fr);min-height:100vh}
+aside{background:var(--pn);border-right:1px solid var(--ln);padding:22px 14px;position:sticky;top:0;height:100vh}
+.brand b{display:block;font-size:19px;letter-spacing:.2px}
+.brand span{color:var(--mu);font-size:13px}
+nav{display:flex;flex-direction:column;gap:4px;margin-top:26px}
+nav button{all:unset;cursor:pointer;padding:10px 12px;border-radius:10px;color:var(--mu);font-weight:500}
+nav button:hover{background:var(--pn2);color:var(--tx)}
+nav button[aria-current=page]{background:linear-gradient(90deg,rgba(140,125,247,.22),rgba(95,141,240,.12));color:var(--tx)}
+:focus-visible{outline:2px solid var(--ac2);outline-offset:2px}
+main{padding:28px clamp(16px,4vw,44px) 60px;max-width:1100px;width:100%}
+h1{font-size:clamp(26px,4vw,36px);line-height:1.15;margin:0 0 6px;font-weight:700}
+h2{font-size:18px;margin:0 0 12px}
+.sub{color:var(--mu);margin:0 0 22px;max-width:62ch}
+.pn{background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:18px;margin-bottom:16px}
+label{display:block;font-weight:500;margin:0 0 6px;font-size:14px}
+.hint{color:var(--mu);font-size:13px;margin:4px 0 0}
+.create-hero{padding:22px;background:radial-gradient(ellipse at 8% 0%,rgba(140,125,247,.2),transparent 55%),linear-gradient(135deg,var(--pn),#242432);border-color:rgba(140,125,247,.28)}
+.create-hero h2{margin:0 0 5px;font-size:20px}
+.make-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0 0;padding:0;border:0}
+.make-option{display:flex;align-items:center;gap:12px;min-height:82px;margin:0;padding:14px;border:1px solid var(--ln);border-radius:12px;background:rgba(23,23,28,.55);cursor:pointer;transition:border-color .15s,background .15s,transform .15s}
+.make-option:hover{border-color:var(--ac);transform:translateY(-1px)}
+.make-option.selected{border-color:var(--ac);background:linear-gradient(120deg,rgba(140,125,247,.18),rgba(95,141,240,.1));box-shadow:inset 0 0 0 1px rgba(140,125,247,.18)}
+.make-option input{width:18px;height:18px;margin:0;flex:none;accent-color:var(--ac)}
+.make-icon{display:grid;place-items:center;width:42px;height:42px;flex:none;border-radius:12px;background:rgba(140,125,247,.16);color:#c1b8ff;font-size:20px}
+.make-copy strong,.make-copy small{display:block}
+.make-copy strong{font-size:15px}
+.make-copy small{margin-top:2px;color:var(--mu);font-size:12px;font-weight:400}
+.work-panel{animation:enter .2s ease-out}
+@keyframes enter{from{opacity:.55;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.image-templates{margin:0 0 16px}
+.image-template-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.image-template{overflow:hidden;padding:0;text-align:left;border:1px solid var(--ln);border-radius:14px;background:var(--pn);color:var(--tx);cursor:pointer;transition:transform .16s,border-color .16s,box-shadow .16s}
+.image-template:hover{transform:translateY(-3px);border-color:var(--ac);box-shadow:0 10px 28px rgba(0,0,0,.22)}
+.image-template:focus-visible{outline:2px solid var(--ac2);outline-offset:3px}
+.template-art{display:block;width:100%;height:132px;background:var(--pn2)}
+.template-art svg{display:block;width:100%;height:100%}
+.template-copy{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 12px}
+.template-copy strong,.template-copy small{display:block}
+.template-copy strong{font-size:14px}
+.template-copy small{margin-top:2px;color:var(--mu);font-size:11px}
+.template-use{flex:none;color:#c1b8ff;font-size:11px;font-weight:600}
+input,select,textarea{width:100%;background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:10px;padding:10px 12px;font:inherit}
+textarea{min-height:120px;resize:vertical}
+.g{display:grid;gap:14px}.g2{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{cursor:pointer;border:1px solid var(--ln);background:var(--pn2);color:var(--tx);padding:9px 14px;border-radius:10px;font:inherit;font-weight:500}
+.btn:hover{border-color:var(--ac)}
+.btn.p{background:linear-gradient(90deg,var(--ac),var(--ac2));border:0;color:#0f0f14;font-weight:600}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.sm{padding:5px 10px;font-size:13px}
+.zone{border:1.5px dashed var(--ln);border-radius:12px;padding:14px;background:var(--bg)}
+.zone.dr{border-color:var(--ac);background:rgba(140,125,247,.08)}
+.file{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 10px;background:var(--pn2);border-radius:8px;margin-top:8px;font-size:14px}
+.file small{color:var(--mu);display:block}
+.err{color:var(--bad);font-size:13px;margin-top:6px}
+.chk{display:flex;gap:8px;align-items:flex-start;font-weight:400;margin:0 0 8px}
+.chk input{width:auto;margin-top:4px}
+.tag{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;border:1px solid var(--ln);color:var(--mu)}
+.tag.no{color:var(--warn);border-color:var(--warn)}
+.scene{border-top:1px solid var(--ln);padding:14px 0;margin:0;background:transparent}
+.scene h3{margin:0 0 10px;font-size:15px}
+.empty{color:var(--mu);padding:18px;border:1px dashed var(--ln);border-radius:12px;text-align:center}
+.note{border-left:3px solid var(--warn);padding:8px 12px;background:rgba(231,196,106,.08);border-radius:6px;font-size:14px;margin-bottom:14px}
+.sr{position:absolute;left:-9999px}
+[hidden]{display:none!important}
+.auth{width:min(440px,calc(100% - 32px));margin:8vh auto;background:var(--pn);border:1px solid var(--ln);border-radius:16px;padding:24px}
+.auth h1{font-size:28px}.auth form{display:grid;gap:14px;margin-top:20px}
+.auth .err{min-height:1.4em}.auth .row{justify-content:space-between}
+@media(max-width:820px){
+.app{grid-template-columns:1fr}
+aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--ln);padding:14px}
+nav{flex-direction:row;overflow-x:auto;margin-top:12px}
+nav button{white-space:nowrap}
+}
+@media(max-width:520px){.make-grid{grid-template-columns:1fr}.create-hero{padding:16px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<section id="authPanel" class="auth" aria-labelledby="authTitle">
+<h1 id="authTitle">Sign in to Whiterose</h1>
+<p class="sub">Sign in or create an account to save your projects securely.</p>
+<form id="authForm">
+<div><label for="authEmail">Email</label><input id="authEmail" type="email" autocomplete="email" required></div>
+<div><label for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="current-password" minlength="8" required></div>
+<div id="confirmPasswordBox" hidden><label for="confirmPassword">Confirm password</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8"></div>
+<button class="btn p" id="authSubmit" type="submit">Sign in</button>
+<p id="authMessage" class="err" role="alert"></p>
+<div class="row"><span id="authSwitchLabel">New here?</span><button class="btn sm" id="authSwitch" type="button">Create account</button></div>
+<button class="btn" id="demoLogin" type="button">Continue with demo account</button>
+</form>
+</section>
+<div class="app" id="studioApp" hidden>
+<aside>
+<div class="brand"><b>Whiterose</b><span>AI Video Studio</span></div>
+<div class="row" style="margin-top:12px"><span id="signedInAs" class="hint"></span><button id="signOut" class="btn sm" type="button">Sign out</button></div>
+<nav aria-label="Main">
+<button data-go="create">Create</button>
+<button data-go="history">Projects</button>
+<button data-go="providers">Providers</button>
+</nav>
+</aside>
+<main>
+<p id="syncStatus" class="hint" role="status"></p>
+
+<section data-v="create">
+<h1>Create with AI</h1>
+<p class="sub">Turn a prompt into an image or a video—all from one workspace.</p>
+<div class="pn create-hero">
+<h2>What do you want to make?</h2>
+<fieldset class="make-grid" aria-label="Choose what to create">
+<label class="make-option selected">
+<input type="radio" name="createType" value="video" checked>
+<span class="make-icon" aria-hidden="true">▶</span>
+<span class="make-copy"><strong>Video</strong><small>Generate a clip from text or a reference image</small></span>
+</label>
+<label class="make-option">
+<input type="radio" name="createType" value="image">
+<span class="make-icon" aria-hidden="true">✦</span>
+<span class="make-copy"><strong>Image</strong><small>Create an image from a prompt</small></span>
+</label>
+</fieldset>
+<p class="hint" style="margin-top:10px">Choose a creation type to see its tools and settings.</p>
+</div>
+<div id="videoWorkspace" class="work-panel">
+<div class="pn">
+<label for="mode">Video type</label>
+<select id="mode"></select>
+<p class="hint" id="modeDesc"></p>
+</div>
+<div class="pn">
+<div class="row" style="justify-content:space-between"><h2 style="margin:0">Prompt</h2>
+<select id="tpl" aria-label="Start from a template" style="width:auto;max-width:100%"></select></div>
+<div style="margin-top:12px"><label for="prompt">Describe the result you want</label>
+<textarea id="prompt" placeholder="Who or what appears, what happens, the tone, and how it should end."></textarea>
+<div id="pErr" class="err" role="alert"></div></div>
+<div id="negBox" style="margin-top:12px"><label for="neg">Avoid (optional)</label>
+<input id="neg" placeholder="For example: distorted hands, fake-looking text"></div>
+<div class="row" style="margin-top:12px">
+<button class="btn sm" id="clr">Clear prompt</button>
+<button class="btn sm" id="rst">Restore previous prompt</button>
+<button class="btn sm" id="svt">Save as template</button>
+</div>
+</div>
+<div class="pn">
+<h2>Settings</h2>
+<div class="g g2">
+<div><label for="videoProvider">Video provider</label><select id="videoProvider"><option value="magic-hour">Magic Hour</option><option value="google-gemini">Google Gemini · Veo 3.1</option><option value="higgsfield-video">Higgsfield · Seedance 2.5</option><option value="google-flow">Google Flow · open with prompt</option></select><p class="hint" id="providerHelp">Choose a connected video provider.</p></div>
+<div><label for="lang">Video language</label><select id="lang"><option>English</option><option>Hindi</option><option value="Hinglish">Hinglish (Hindi + English)</option><option>Marathi</option></select><p class="hint">Narration and captions will follow your language choice.</p></div>
+<div id="ratBox"><label for="ratio">Aspect ratio</label><select id="ratio"><option>9:16</option><option>16:9</option><option>1:1</option></select></div>
+<div id="durBox"><label for="videoDuration">Clip duration</label><select id="videoDuration"><option value="6">6 seconds</option><option value="10">10 seconds</option><option value="15">15 seconds</option><option value="20">20 seconds</option><option value="30">30 seconds</option></select></div>
+</div>
+<p class="hint" id="providerLimits" style="margin-top:12px">Provider key presence does not confirm available credits; generation may incur charges.</p>
+</div>
+<div class="pn" id="refBox">
+<h2>Match the reference</h2>
+<p class="hint" style="margin:-6px 0 10px">Choose what to follow closely. Unchecked items can change.</p>
+<div id="matches" class="g g2"></div>
+</div>
+<div class="pn">
+<h2>Reference files</h2>
+<p class="hint" style="margin:-6px 0 6px">Files stay in your browser for now. Size limits shown are defaults; the provider’s limits apply once connected.</p>
+<div id="zones" class="g"></div>
+</div>
+<div class="pn" style="margin-top:16px">
+<h2>Generate video</h2>
+<p class="hint">Describe the whole video in the prompt above. Add a reference image and choose Image to video to animate it; no storyboard step is required.</p>
+<div class="g g2" style="margin-top:12px">
+<div><label for="variations">Video variations</label><select id="variations"><option value="1">1 video</option><option value="2">2 videos</option></select></div>
+</div>
+<div class="row" style="margin-top:12px">
+<button class="btn" id="save" type="button">Save draft</button>
+<button class="btn sm" id="previewVideoPrompt" type="button">Preview prompt</button>
+<button class="btn p" id="runVideo" type="button" disabled>Generate video</button>
+</div>
+<textarea id="videoPromptPreview" aria-label="Generation prompt preview" readonly hidden style="margin-top:10px;min-height:150px"></textarea>
+<label class="chk" id="costApprovalLabel" style="margin-top:12px"><input type="checkbox" id="ok"> I understand video generation may use paid provider credits.</label>
+<label class="chk"><input type="checkbox" id="rights"> I have the rights to use this prompt and any reference image.</label>
+<p id="videoProviderStatus" class="hint" role="status">Checking video provider…</p>
+<div id="generationJobs" aria-live="polite"></div>
+</div>
+ </div>
+<div id="imageWorkspace" class="work-panel" hidden>
+<div class="pn">
+<h2>Image studio</h2>
+<p class="hint">Generate an image from a prompt with OpenAI. API usage may incur charges. A local SVG illustration option is available when you do not want to use API credits.</p>
+<section class="image-templates" aria-labelledby="imageTemplatesTitle">
+<h3 id="imageTemplatesTitle" style="margin:16px 0 4px;font-size:15px">Start with a visual template</h3>
+<p class="hint" style="margin-bottom:10px">Pick a look to add a ready-to-edit prompt. The preview is an original illustration, not a generated result.</p>
+<div class="image-template-grid">
+<button class="image-template" type="button" data-image-template="portrait" aria-label="Use the editorial portrait image prompt">
+<span class="template-art" aria-hidden="true"><svg viewBox="0 0 320 180" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tplPortraitBg" x1="24" y1="8" x2="278" y2="180" gradientUnits="userSpaceOnUse"><stop stop-color="#7B65C8"/><stop offset="1" stop-color="#EF9F9A"/></linearGradient><linearGradient id="tplPortraitClothes" x1="122" y1="110" x2="203" y2="177" gradientUnits="userSpaceOnUse"><stop stop-color="#273447"/><stop offset="1" stop-color="#526B83"/></linearGradient></defs><path fill="url(#tplPortraitBg)" d="M0 0h320v180H0z"/><circle cx="251" cy="39" r="19" fill="#FFDCA6" fill-opacity=".8"/><path d="M0 144c53-27 86-20 128 1s115 23 192-11v46H0v-36Z" fill="#2C304C" fill-opacity=".4"/><path d="M101 180c5-34 22-53 55-59h22c34 6 49 25 54 59H101Z" fill="url(#tplPortraitClothes)"/><path d="M137 111h52v30c-8 12-43 12-52 0v-30Z" fill="#B97163"/><path d="M126 71c0-28 14-45 39-45s39 17 39 45v25c0 25-17 42-39 42s-39-17-39-42V71Z" fill="#E6AA88"/><path d="M122 78c-7-38 11-60 43-60 29 0 47 20 43 57l-8 16-6-31c-21 2-37-4-51-16-5 14-12 22-20 27l-1 22-7-15Z" fill="#28253A"/><path d="M143 83h9m28 0h9" stroke="#513C42" stroke-width="3" stroke-linecap="round"/><path d="M157 111c7 5 14 5 21 0" stroke="#9C514F" stroke-width="2.5" stroke-linecap="round"/><path d="M40 34h58M40 45h35" stroke="#FFF" stroke-opacity=".45" stroke-width="2" stroke-linecap="round"/></svg></span>
+<span class="template-copy"><span><strong>Editorial portrait</strong><small>Warm light · fashion editorial</small></span><span class="template-use">Use prompt</span></span>
+</button>
+<button class="image-template" type="button" data-image-template="product" aria-label="Use the premium product image prompt">
+<span class="template-art" aria-hidden="true"><svg viewBox="0 0 320 180" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tplProductBg" x1="40" y1="0" x2="285" y2="180" gradientUnits="userSpaceOnUse"><stop stop-color="#112E35"/><stop offset="1" stop-color="#D2A46D"/></linearGradient><linearGradient id="tplBottle" x1="133" y1="47" x2="193" y2="153" gradientUnits="userSpaceOnUse"><stop stop-color="#F4E2BD" stop-opacity=".95"/><stop offset="1" stop-color="#A6C2B4" stop-opacity=".82"/></linearGradient></defs><path fill="url(#tplProductBg)" d="M0 0h320v180H0z"/><circle cx="159" cy="91" r="69" fill="#FFF" fill-opacity=".07"/><path d="M47 148h226" stroke="#F5D4A0" stroke-opacity=".7" stroke-width="2"/><path d="M121 146c8-9 18-13 39-13s33 5 40 13" stroke="#F5D4A0" stroke-opacity=".55" stroke-width="2"/><path d="M144 44h32v18h-32z" fill="#D5B989"/><path d="M149 28h22v17h-22z" fill="#E7D1A5"/><path d="M135 63c0-4 4-8 8-8h34c5 0 8 4 8 8v72c0 7-5 12-12 12h-26c-7 0-12-5-12-12V63Z" fill="url(#tplBottle)" stroke="#F9E9C9" stroke-width="2"/><path d="M144 91h32v24h-32z" fill="#18363A" fill-opacity=".84"/><path d="M150 99h20m-15 7h10" stroke="#EBD5A9" stroke-width="2" stroke-linecap="round"/><path d="M60 55c13 9 15 20 12 34m188-42c-12 11-14 22-11 35" stroke="#F1D09A" stroke-opacity=".65" stroke-width="2" stroke-linecap="round"/><circle cx="69" cy="45" r="4" fill="#F1D09A"/><circle cx="249" cy="115" r="5" fill="#F1D09A"/></svg></span>
+<span class="template-copy"><span><strong>Premium product</strong><small>Studio light · luxury campaign</small></span><span class="template-use">Use prompt</span></span>
+</button>
+<button class="image-template" type="button" data-image-template="travel" aria-label="Use the dreamy travel image prompt">
+<span class="template-art" aria-hidden="true"><svg viewBox="0 0 320 180" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tplTravelSky" x1="152" y1="0" x2="165" y2="175" gradientUnits="userSpaceOnUse"><stop stop-color="#F6B88F"/><stop offset=".55" stop-color="#ED8F79"/><stop offset="1" stop-color="#654F8F"/></linearGradient></defs><path fill="url(#tplTravelSky)" d="M0 0h320v180H0z"/><circle cx="230" cy="55" r="24" fill="#FFE1AD"/><path d="m0 112 63-55 44 40 56-62 88 79H0Z" fill="#775D8D"/><path d="m82 180 71-99 44 52 34-35 89 82H82Z" fill="#394E70"/><path d="M0 133c60-18 97-8 150 8s106 19 170-2v41H0v-47Z" fill="#284F67"/><path d="M159 180c7-19 16-31 33-42 13 14 21 28 24 42h-57Z" fill="#F2BD88"/><path d="M0 151c53-11 79-6 126 10m140-69c17 7 32 17 54 30" stroke="#F7D5AE" stroke-opacity=".58" stroke-width="2"/></svg></span>
+<span class="template-copy"><span><strong>Dreamy travel</strong><small>Sunset · cinematic landscape</small></span><span class="template-use">Use prompt</span></span>
+</button>
+<button class="image-template" type="button" data-image-template="food" aria-label="Use the cozy food editorial image prompt">
+<span class="template-art" aria-hidden="true"><svg viewBox="0 0 320 180" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tplFoodBg" x1="18" y1="4" x2="285" y2="173" gradientUnits="userSpaceOnUse"><stop stop-color="#59382E"/><stop offset="1" stop-color="#C88150"/></linearGradient></defs><path fill="url(#tplFoodBg)" d="M0 0h320v180H0z"/><path d="M30 45h88m-81 10h55" stroke="#F7D8B3" stroke-opacity=".55" stroke-width="2" stroke-linecap="round"/><circle cx="183" cy="102" r="58" fill="#EAD9BF"/><circle cx="183" cy="102" r="46" fill="#F7F0E3"/><circle cx="169" cy="91" r="11" fill="#CB6546"/><circle cx="198" cy="88" r="9" fill="#DF9B48"/><circle cx="181" cy="111" r="13" fill="#6B8A54"/><path d="M154 117c14-10 39-10 57 3" stroke="#E9BD72" stroke-width="4" stroke-linecap="round"/><path d="M230 51c-8 14-7 28 2 39m-13-22c12 2 19 10 20 22" stroke="#B8CA84" stroke-width="4" stroke-linecap="round"/><path d="M262 135h31m-24 7h21" stroke="#F7D8B3" stroke-opacity=".62" stroke-width="2" stroke-linecap="round"/><circle cx="73" cy="125" r="19" fill="#E6B75F" fill-opacity=".8"/><path d="M64 125c6-8 12-8 18 0-6 8-12 8-18 0Z" fill="#658456"/></svg></span>
+<span class="template-copy"><span><strong>Cozy food editorial</strong><small>Rustic table · natural light</small></span><span class="template-use">Use prompt</span></span>
+</button>
+</div>
+</section>
+<div style="margin-top:12px"><label for="imagePrompt">Describe the image</label>
+<textarea id="imagePrompt" placeholder="For example: a peaceful mountain landscape at sunset, or colorful flowers in a garden."></textarea></div>
+<div class="g g2" style="margin-top:12px">
+<div><label for="imageProvider">Image provider</label><select id="imageProvider"><option value="openai-image">OpenAI · GPT Image 2.5 Flare</option><option value="google-gemini-image">Google Gemini · Nano Banana</option><option value="higgsfield-image">Higgsfield · SOUL</option><option value="browser-svg">Free local SVG illustration · no credits</option></select></div>
+<div><label for="imageAspectRatio">Image aspect ratio</label><select id="imageAspectRatio"><option value="1:1">Square · 1:1</option><option value="16:9">Landscape · 16:9</option><option value="9:16">Portrait · 9:16</option></select></div>
+</div>
+<label class="chk" id="imageCostApprovalLabel" hidden style="margin-top:12px"><input type="checkbox" id="imageCostApproval"> I understand AI image generation may use paid provider credits.</label>
+<label class="chk" id="imageRightsLabel" hidden><input type="checkbox" id="imageRights"> I have the rights to use this prompt.</label>
+<div class="row" style="margin-top:12px">
+<button class="btn p" id="runImage" type="button">Create free illustration</button>
+</div>
+<p id="imageProviderStatus" class="hint" role="status">Illustration is generated in this browser; prompt is not sent anywhere.</p>
+<div id="imageGenerationJobs" aria-live="polite"></div>
+<details style="margin-top:12px"><summary>Open a free/limited image website instead</summary>
+<p class="hint">These are browser handoffs, not app APIs. Availability, free usage and login requirements are controlled by each site; copy the prompt and submit it there yourself.</p>
+<div class="row">
+<button class="btn sm" type="button" data-image-handoff="https://www.bing.com/images/create">Copy prompt &amp; open Bing Image Creator</button>
+<button class="btn sm" type="button" data-image-handoff="https://chatgpt.com/">Copy prompt &amp; open ChatGPT</button>
+<button class="btn sm" type="button" data-image-handoff="https://leonardo.ai/">Copy prompt &amp; open Leonardo.ai</button>
+<button class="btn sm" type="button" data-image-handoff="https://huggingface.co/spaces?search=text-to-image">Copy prompt &amp; find Hugging Face Spaces</button>
+</div></details>
+</div>
+</div>
+</section>
+
+<section data-v="history" hidden>
+<h1>Projects</h1>
+<p class="sub">Saved drafts and your recent video-generation jobs.</p>
+<div id="videoJobs"></div>
+<div id="hist"></div>
+</section>
+
+<section data-v="providers" hidden>
+<h1>Providers</h1>
+<p class="sub">Provider connection status is shown below. API keys stay on the server and are never placed in this page.</p>
+<div id="prov"></div>
+</section>
+
+</main>
+</div>
+<div id="live" class="sr" aria-live="polite"></div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k)||'null')??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}};
+window.WR_PROJECTS_KEY=()=>window.WR_USER_ID?'wr_projects_'+window.WR_USER_ID:'wr_projects';
+const say=t=>{$('#live').textContent=t};
+
+const INL={image:'Reference image',video:'Reference video',audio:'Audio or voice recording',script:'Script or subtitle file',brand:'Logo, product or character image'};
+const RULES={image:{ext:['jpg','jpeg','png','webp'],mb:20},video:{ext:['mp4','mov','webm'],mb:500},audio:{ext:['mp3','wav','m4a'],mb:50},script:{ext:['txt','srt','vtt'],mb:1},brand:{ext:['jpg','jpeg','png','webp'],mb:20}};
+const MODES=[
+{id:'t2v',n:'Text to video',d:'A video from your description alone.',ins:['brand'],neg:1,dur:1,ratio:1,ref:0},
+{id:'i2v',n:'Image to video',d:'Animate a still image.',ins:['image','brand'],neg:1,dur:1,ratio:1,ref:0},
+{id:'v2v',n:'Reference video to video',d:'Restyle or recreate a video while following its structure.',ins:['video','image','audio','script','brand'],neg:1,dur:1,ratio:1,ref:1},
+{id:'talk',n:'Talking photo or avatar',d:'Needs a portrait you are authorized to use and a voice recording or script.',ins:['image','audio','script'],neg:0,dur:1,ratio:1,ref:0},
+{id:'lip',n:'Lip sync',d:'Match a speaker’s mouth to a recording.',ins:['video','audio'],neg:0,dur:1,ratio:0,ref:0},
+{id:'a2v',n:'Audio to video',d:'Build visuals that follow supplied audio.',ins:['audio','image','script','brand'],neg:1,dur:1,ratio:1,ref:1},
+{id:'img',n:'Image generation',d:'Create a new image from a description.',ins:['image','brand'],neg:1,dur:0,ratio:1,ref:0},
+{id:'edit',n:'Image editing',d:'Change an uploaded image with instructions.',ins:['image','brand'],neg:0,dur:0,ratio:1,ref:0},
+{id:'tts',n:'Voiceover (text to speech)',d:'Speech from a script. Voice cloning needs the speaker’s consent.',ins:['audio','script'],neg:0,dur:0,ratio:0,ref:0},
+{id:'sub',n:'Subtitles and assembly',d:'Add captions and combine clips, voiceover and music.',ins:['video','audio','script'],neg:0,dur:0,ratio:1,ref:0},
+{id:'ved',n:'Prompt-assisted video editing',d:'Edit an existing video with instructions.',ins:['video','audio'],neg:0,dur:0,ratio:1,ref:0}
+];
+const MATCH=['Overall visual style','Scene order and timing','Camera framing and movement','Lighting and colour grading','Editing pace and transitions','Subject or character','Wardrobe and product look','Audio timing and delivery','Logo and brand details'];
+const TPLS=[
+['Choose a template',''],
+['Business promo','A short promotional video introducing WHITEROSE, a cybersecurity and software development company. Tagline: Build Smarter. Work Better. End on the website and a WhatsApp call to action. Add no offers, prices or claims.'],
+['Software demo','A walkthrough of a software product showing the main screens in order, with calm narration and clear captions. Product: [add product name].'],
+['Social reel','A fast vertical reel with strong first seconds, short captions and a clear closing call to action. Topic: [add topic].'],
+['Explainer','A simple explainer that introduces one problem, shows how it works in three steps, and ends with a summary. Topic: [add topic].'],
+['Product ad','A clean product advertisement showing [add product] from several angles, with the logo kept stable and no unverified claims.']
+];
+const PROVS=[
+['OpenAI · GPT Image 2.5 Flare','Prompt-to-image through the OpenAI Images API; requires OPENAI_API_KEY and may be billed.'],
+['Higgsfield · Seedance 2.5 video','Text-to-video, 4–30 seconds. API generation uses account credits.'],
+['Higgsfield · SOUL image','Prompt-to-image API. API generation uses account credits.'],
+['Magic Hour','Video and image tools'],
+['Google Gemini · Veo 3.1','Veo video generation via the Gemini API; requires GEMINI_API_KEY'],
+['Google Gemini · Nano Banana image','Prompt-to-image via the Gemini Interactions API; quota and billing apply.'],
+['Google Flow','Prompt handoff opens Flow; generation and reference upload are completed on Google Flow'],
+['Bing Image Creator','External website handoff; no supported app generation API is used'],
+['ChatGPT image generation','External website handoff; no consumer-account API access is used'],
+['Leonardo.ai','External website handoff; any free credits are controlled by Leonardo'],
+['Hugging Face Spaces','External demo search; availability and free quotas vary by Space'],
+['Planning model','Optional assisted storyboard planning'],
+['n8n','Background jobs and approval steps'],
+['Storage and database','Private file storage and saved projects']
+];
+
+const S={files:{},prev:'',scenes:[],id:null,old:[]};
+const mode=()=>MODES.find(m=>m.id===$('#mode').value);
+
+function show(v){
+document.querySelectorAll('[data-v]').forEach(e=>e.hidden=e.dataset.v!==v);
+document.querySelectorAll('nav button').forEach(b=>b.setAttribute('aria-current',b.dataset.go===v?'page':'false'));
+if(v==='history')renderHist();if(v==='providers')renderProv();
+window.scrollTo(0,0)}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>show(b.dataset.go));
+
+$('#mode').innerHTML=MODES.filter(m=>['t2v','i2v'].includes(m.id)).map(m=>`<option value="${m.id}">${esc(m.n)}</option>`).join('');
+$('#tpl').innerHTML=TPLS.map((t,i)=>`<option value="${i}">${esc(t[0])}</option>`).join('')+(store.get('wr_tpl',[])).map((t,i)=>`<option value="u${i}">Saved: ${esc(t.slice(0,28))}</option>`).join('');
+$('#matches').innerHTML=MATCH.map((m,i)=>`<label class="chk"><input type="checkbox" data-m="${i}"> ${esc(m)}</label>`).join('');
+
+function applyMode(){
+const m=mode();$('#modeDesc').textContent=m.d;
+$('#negBox').hidden=!m.neg;$('#durBox').hidden=!m.dur;$('#ratBox').hidden=!m.ratio;$('#refBox').hidden=!m.ref;
+Object.keys(S.files).forEach(k=>{if(!m.ins.includes(k))delete S.files[k]});
+renderZones()}
+$('#mode').onchange=applyMode;
+
+function renderZones(){
+const m=mode();
+$('#zones').innerHTML=m.ins.map(t=>{const r=RULES[t];const fl=S.files[t]||[];
+return `<div class="zone" data-z="${t}"><label for="f-${t}">${INL[t]} <span class="tag">${r.ext.join(', ')} · up to ${r.mb} MB</span></label>
+<input id="f-${t}" type="file" data-t="${t}" accept="${r.ext.map(e=>'.'+e).join(',')}">
+<p class="hint">Drop a file here or browse.</p><div class="err" data-e="${t}" role="alert"></div>
+${fl.map((f,i)=>`<div class="file"><div>${esc(f.name)}<small>${esc(f.size)}${f.meta?' · '+esc(f.meta):''}</small></div><button class="btn sm" data-rm="${t}" data-i="${i}">Remove</button></div>`).join('')}</div>`}).join('');
+document.querySelectorAll('#zones input[type=file]').forEach(i=>i.onchange=()=>{add(i.dataset.t,i.files);});
+document.querySelectorAll('.zone').forEach(z=>{
+z.ondragover=e=>{e.preventDefault();z.classList.add('dr')};
+z.ondragleave=()=>z.classList.remove('dr');
+z.ondrop=e=>{e.preventDefault();z.classList.remove('dr');add(z.dataset.z,e.dataTransfer.files)}});
+document.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{S.files[b.dataset.rm].splice(+b.dataset.i,1);renderZones()})}
+
+function meta(t,f){return new Promise(res=>{
+if(t==='script')return res('');
+const u=URL.createObjectURL(f);let done=false;
+const end=v=>{if(done)return;done=true;URL.revokeObjectURL(u);res(v)};
+setTimeout(()=>end('details unavailable'),4000);
+if(t==='image'||t==='brand'){const i=new Image();i.onload=()=>end(i.naturalWidth+'×'+i.naturalHeight);i.onerror=()=>end('could not read image');i.src=u}
+else{const e=document.createElement(t==='video'?'video':'audio');e.preload='metadata';
+e.onloadedmetadata=()=>end(Math.round(e.duration)+' s'+(t==='video'?' · '+e.videoWidth+'×'+e.videoHeight:''));
+e.onerror=()=>end('could not read file');e.src=u}})}
+
+async function add(t,list){
+const r=RULES[t],box=document.querySelector(`[data-e="${t}"]`);let errs=[];
+for(const f of list){
+const ext=f.name.split('.').pop().toLowerCase();
+if(!r.ext.includes(ext)){errs.push(`${f.name}: use ${r.ext.join(', ')}.`);continue}
+if(f.size>r.mb*1048576){errs.push(`${f.name}: over ${r.mb} MB.`);continue}
+const m=await meta(t,f);
+const dimensions=/^(\d+)×(\d+)$/.exec(m);
+(S.files[t]=S.files[t]||[]).push({
+name:f.name,size:(f.size/1048576).toFixed(1)+' MB',meta:m,file:f,
+width:dimensions?Number(dimensions[1]):null,height:dimensions?Number(dimensions[2]):null
+})}
+renderZones();
+if(errs.length){document.querySelector(`[data-e="${t}"]`).textContent=errs.join(' ');say(errs.join(' '))}}
+
+$('#clr').onclick=()=>{S.prev=$('#prompt').value;$('#prompt').value=''};
+$('#rst').onclick=()=>{if(S.prev){$('#prompt').value=S.prev}};
+$('#svt').onclick=()=>{const v=$('#prompt').value.trim();if(!v){$('#pErr').textContent='Write a prompt before saving it as a template.';return}
+const a=store.get('wr_tpl',[]);a.push(v);store.set('wr_tpl',a);
+$('#tpl').insertAdjacentHTML('beforeend',`<option value="u${a.length-1}">Saved: ${esc(v.slice(0,28))}</option>`);say('Template saved')};
+$('#tpl').onchange=e=>{const v=e.target.value;let t='';
+if(v[0]==='u')t=store.get('wr_tpl',[])[+v.slice(1)]||'';else t=TPLS[+v][1];
+if(t){S.prev=$('#prompt').value;$('#prompt').value=t}e.target.selectedIndex=0};
+
+function picked(){return [...document.querySelectorAll('[data-m]:checked')].map(c=>MATCH[+c.dataset.m])}
+
+function save(){
+const m=mode(),a=store.get(window.WR_PROJECTS_KEY(),[]);
+const p={id:S.id||String(Date.now()),mode:m.id,prompt:$('#prompt').value,neg:$('#neg').value,lang:$('#lang').value,ratio:$('#ratio').value,dur:$('#videoDuration').value,match:picked(),files:Object.entries(S.files).flatMap(([t,x])=>x.map(f=>INL[t]+': '+f.name)),scenes:S.scenes,saved:new Date().toISOString()};
+S.id=p.id;const i=a.findIndex(x=>x.id===p.id);if(i>=0)a[i]=p;else a.unshift(p);
+say(store.set(window.WR_PROJECTS_KEY(),a)?'Draft saved in this browser.':'Could not save: browser storage is unavailable.')}
+
+function renderHist(){
+const a=store.get(window.WR_PROJECTS_KEY(),[]);
+$('#hist').innerHTML=a.length?a.map(p=>`<div class="pn"><div class="row" style="justify-content:space-between"><div><b>${esc((p.prompt||'Untitled').slice(0,70))}</b>
+<p class="hint" style="margin:2px 0 0">${esc(MODES.find(m=>m.id===p.mode)?.n||'')} · saved ${esc(new Date(p.saved).toLocaleString())} · <span class="tag">Draft, never submitted</span></p>
+${p.files.length?`<p class="hint" style="margin:2px 0 0">Re-attach to reuse: ${esc(p.files.join('; '))}</p>`:''}</div>
+<div class="row"><button class="btn sm" data-open="${esc(p.id)}">Open</button><button class="btn sm" data-x="${esc(p.id)}">Delete</button></div></div></div>`).join('')
+:'<div class="empty">No saved projects yet. Save a draft from the Create page.</div>';
+document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>{
+const p=a.find(x=>x.id===b.dataset.open);if(!p)return;
+S.id=p.id;S.files={};$('#mode').value=p.mode;applyMode();
+$('#prompt').value=p.prompt;$('#neg').value=p.neg;$('#lang').value=p.lang;$('#ratio').value=p.ratio;$('#videoDuration').value=p.dur||'6';
+document.querySelectorAll('[data-m]').forEach(c=>c.checked=p.match.includes(MATCH[+c.dataset.m]));
+S.scenes=p.scenes;show('create')});
+document.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{store.set(window.WR_PROJECTS_KEY(),a.filter(x=>x.id!==b.dataset.x));renderHist()})}
+
+function renderProv(){
+$('#prov').innerHTML=PROVS.map(p=>`<div class="pn"><div class="row" style="justify-content:space-between"><div><b>${esc(p[0])}</b><p class="hint" style="margin:2px 0 0">${esc(p[1])}</p></div><span class="tag no">Checking…</span></div></div>`).join('');
+fetch((window.WR_API||'')+'/api/providers').then(async response=>{
+if(!response.ok)throw new Error('Could not load provider status.');
+const connected=new Map((await response.json()).map(p=>[p.name,p]));
+document.querySelectorAll('#prov .pn').forEach(card=>{
+const name=card.querySelector('b').textContent;
+const status=connected.get(name);
+const tag=card.querySelector('.tag');
+if(status?.handoff){tag.textContent='Website handoff';tag.className='tag'}
+else if(status){tag.textContent=status.configured?'Connected':'Not connected';tag.className=status.configured?'tag':'tag no'}
+else if(name==='Storage and database'){tag.textContent='Local jobs + Supabase projects';tag.className='tag'}
+else{tag.textContent='Not connected';tag.className='tag no'}
+});
+}).catch(error=>{document.querySelector('#prov').insertAdjacentHTML('afterbegin',`<p class="err" role="alert">${esc(error.message)}</p>`)})}
+
+applyMode();show('create');
+</script>
+<script src="image-art.js"></script>
+<script src="api.js"></script>
+</body>
+</html>

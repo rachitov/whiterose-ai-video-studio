@@ -6,7 +6,7 @@ Run: `npm install`, copy `.env.example` to `.env`, fill in `SUPABASE_URL` and `S
 
 ## Deploy on Render
 
-This is a Node.js web service, not a static GitHub Pages site. After pushing the project to GitHub, create a Render Blueprint from the repository and select `render.yaml`. Render builds with `npm ci`, starts with `npm start`, and checks `/api/health`. Enter secrets in the Render service environment settings only; `.env` is local and must never be committed. Supabase URL and anon key are required for sign-in and saved projects. Add only provider keys you intend to use. Rotate any API key that has been exposed outside the provider dashboard.
+This is a Node.js web service, not a static GitHub Pages site. After pushing the project to GitHub, create a Render Blueprint from the repository and select `render.yaml`. Render builds with `npm ci`, starts with `npm start`, and checks `/api/health`. Enter secrets in the Render service environment settings only; `.env` is local and must never be committed. Supabase URL and anon key are required for sign-in and saved projects. After the service is created, add only the provider keys you intend to use in its Render Environment settings; those secret values are not stored in the Blueprint. Rotate any API key that has been exposed outside the provider dashboard.
 
 The Blueprint uses Render's free web-service plan. Free instances can sleep when idle and their local filesystem is ephemeral; SQLite-backed generation-job history can be lost after a restart or redeploy. User projects are stored in Supabase. Confirm current Render pricing and limits before changing to a paid plan.
 
